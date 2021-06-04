@@ -1,5 +1,105 @@
+#include"libOne.h"
+int createTriangle() {
+	struct SHAPE_VERTEX vertices[3];
+	vertices[0].x = 0;
+	vertices[0].y = -1;
+	vertices[1].x = 1;
+	vertices[1].y = 1;
+	vertices[2].x = -1;
+	vertices[2].y = 1;
+	return createShape(vertices, 3);
+}
+int createPolygon() {
+	const int NUM = 3;
+	struct SHAPE_VERTEX vertices[NUM];
+	float deg = 360.0f / NUM;
+	angleMode(DEGREES);
+	for (int i = 0; i < NUM; i++) {
+		vertices[i].x = cos(deg*i);
+		vertices[i].y = sin(deg*i);
+	}
+	return createShape(vertices, NUM);
+}
 
+/*
+#include"libOne.h"
+int createTriangle() {
+	struct SHAPE_VERTEX vertices[3];
+	vertices[0].x = 0;
+	vertices[0].y = -1;
+	vertices[1].x = 1;
+	vertices[1].y = 1;
+	vertices[2].x = -1;
+	vertices[2].y = 1;
+	return createShape(vertices, 3);
+}
 
+void gmain() {
+	window(1000, 1000);
+	int idx = createTriangle();
+	float deg = 0;
+	angleMode(DEGREES);
+	while (notQuit) {
+		deg += 1;
+		clear(200);
+		strokeWeight(10);
+		fill(255, 255, 0);
+		shape(idx, 500, 500, deg, 200);
+	}
+}
+*/
+/*
+//ŽžŒv
+#include"libOne.h"
+#include<time.h>
+void gmain() {
+	window(1000, 1000);
+	float x, y, deg = 0;
+	float second = 0, minute = 0, hour = 0;
+	angleMode(DEGREES);
+	time_t stdTime;
+	struct tm local;
+	while (notQuit) {
+		time(&stdTime);
+		localtime_s(&local, &stdTime);
+		second = local.tm_sec;
+		minute = local.tm_min;
+		hour = local.tm_hour;
+
+		//second += 1;
+		//if (second >= 60) { minute++; second = 0; }
+		//if (minute >= 60) { hour++; minute = 0; }
+		clear(200);
+		stroke(120, 160, 255);
+		strokeWeight(30);
+		fill(255);
+		circle(500, 500, 400*2);
+
+		deg = 30 * hour + 30 * minute / 60;
+		x = sin(deg) * 200;
+		y = -cos(deg) * 200;
+		stroke(120, 160, 255);
+		strokeWeight(20);
+		line(500, 500, 500 + x, 500 + y);
+
+		deg = 6 * minute + 6 * second / 60;
+		x = sin(deg) * 350;
+		y = -cos(deg) * 350;
+		stroke(160, 200, 255);
+		strokeWeight(15);
+		line(500, 500, 500 + x, 500 + y);
+
+		deg = 6 * second;
+		x = sin(deg) * 350;
+		y = -cos(deg) * 350;
+		stroke(100, 120, 255);
+		strokeWeight(5);
+		line(500, 500, 500 + x, 500 + y);
+	}
+}
+*/
+
+/*
 #include"libOne.h"
 void roundFace(float px, float py) {
 	fill(255, 255, 0);
@@ -51,7 +151,7 @@ void gmain() {
 		}
 	}
 }
-
+*/
 /*
 #include"libOne.h"
 void gmain() {
