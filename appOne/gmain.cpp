@@ -1,4 +1,185 @@
 #include"libOne.h"
+struct POS {
+	float x, y, z;
+};
+void gmain() {
+	window(1000, 1000);
+	int numCorners = 8;
+	int numRings = 1;
+	int numVertices = numCorners * numRings;
+	float deg = 360.0f / numCorners;
+	angleMode(DEGREES);
+	struct POS* op = new POS[numVertices];
+	for (int i = 0; i < numCorners; i++) {
+		op[i].x = sin(deg * i);
+		op[i].y = cos(deg * i);
+		op[i].z = 0;
+	}
+	struct POS* p = new POS[numVertices];
+	deg = 0;
+	int state = 0;
+	while (notQuit) {
+		float s = sin(deg);
+		float c = cos(deg);
+		deg++;
+		if (deg > 360) {
+			deg = 0;
+			++state %= 2;
+		}
+		for (int i = 0; i < numVertices; i++) {
+			if (state == 0) {
+				p[i].x = op[i].x * c + op[i].z * -s;
+				p[i].y = op[i].y;
+				p[i].z = op[i].x * s + op[i].z * c;
+			}
+			else {
+				p[i].x = op[i].x;
+				p[i].y = op[i].y * c + op[i].z * -s;
+				p[i].z = op[i].y * s + op[i].z * c;
+			}
+			p[i].z += 5;
+
+			p[i].x /= p[i].z;
+			p[i].y /= p[i].z;
+		}
+		clear(0);
+		mathAxis(0.5);
+		stroke(160, 200, 255);
+		strokeWeight(10);
+		for (int i = 0; i < numVertices; i++) {
+			int j = (i + 1) % 4;
+			mathPoint(p[i].x, p[i].y);
+		}
+	}
+	delete[]op;
+	delete[]p;
+}
+/*
+#include"libOne.h"
+//正方形
+struct POS {
+	float x, y, z;
+};
+void gmain() {
+	window(1000, 1000);
+	const int num = 8;
+	struct POS op[num] = {
+		-1,1,-1,
+		-1,-1,-1,
+		1,-1,-1,
+		1,1,-1,
+		-1,1,1,
+		-1,-1,1,
+		1,-1,1,
+		1,1,1,
+	};
+	struct POS p[num];
+	float deg = 0;
+	angleMode(DEGREES);
+	int state = 0;
+	while (notQuit) {
+		float s = sin(deg);
+		float c = cos(deg);
+		deg++;
+		if (deg > 360) {
+			deg = 0;
+			++state %= 2;
+		}
+		for (int i = 0; i < num; i++) {
+			if (state == 0) {
+				p[i].x = op[i].x * c + op[i].z * -s;
+				p[i].y = op[i].y;
+				p[i].z = op[i].x * s + op[i].z * c;
+			}
+			else {
+				p[i].x = op[i].x;
+				p[i].y = op[i].y * c + op[i].z * -s;
+				p[i].z = op[i].y * s + op[i].z * c;
+			}
+			p[i].z += 5;
+
+			p[i].x /= p[i].z;
+			p[i].y /= p[i].z;
+		}
+		clear(128);
+		mathAxis(0.5);
+		stroke(160, 200, 255);
+		strokeWeight(10);
+		for (int i = 0; i < 4; i++) {
+			int j = (i + 1) % 4;
+			mathLine(p[i].x, p[i].y, p[j].x, p[j].y);
+			mathLine(p[i + 4].x, p[i + 4].y, p[j + 4].x, p[j + 4].y);
+			mathLine(p[i].x, p[i].y, p[i + 4].x, p[i + 4].y);
+		}
+	}
+}
+*/
+
+/*
+#include"libOne.h"
+//ハート形
+int createHeart() {
+	const int NUM = 60;
+	struct SHAPE_VERTEX vertices[NUM];
+	float deg = 360.0f / NUM;
+	angleMode(DEGREES);
+	for (int i = 0; i < NUM; i++) {
+		float t = deg * i;
+		vertices[i].x = pow(sin(t), 3);
+		vertices[i].y = -(
+			13 * cos(t) -
+			5 * cos(2 * t) -
+			2 * cos(3 * t) -
+			1 * cos(4 * t) ) / 16;
+	}
+	return createShape(vertices, NUM);
+}
+void gmain() {
+	window(1000, 1000);
+	int idx = createHeart();
+	float deg = 0;
+	angleMode(DEGREES);
+	while (notQuit) {
+		//deg += 1;
+		clear(200);
+		strokeWeight(5);
+		fill(255, 200, 200);
+		shape(idx, 500, 500, deg, 20);
+	}
+}
+*/
+/*
+//星形
+#include"libOne.h"
+int createStar() {
+	const int NUM = 10;
+	struct SHAPE_VERTEX vertices[NUM];
+	float deg = 360.0f / NUM;
+	angleMode(DEGREES);
+	for (int i = 0; i < NUM; i++) {
+		float radius = 0.5f + 0.5f * (i%2);
+		vertices[i].x = sin(deg * i) * radius;
+		vertices[i].y = cos(deg * i) * radius;
+	}
+	return createShape(vertices, NUM);
+}
+void gmain() {
+	window(1000, 1000);
+	int idx = createStar();
+	float deg = 0;
+	angleMode(DEGREES);
+	while (notQuit) {
+		deg += 1;
+		clear(200);
+		strokeWeight(5);
+		fill(255, 255, 0);
+		shape(idx, 500, 500, deg, 200);
+	}
+}
+*/
+/*
+//正多角形
+#include"libOne.h"
 int createTriangle() {
 	struct SHAPE_VERTEX vertices[3];
 	vertices[0].x = 0;
@@ -10,16 +191,30 @@ int createTriangle() {
 	return createShape(vertices, 3);
 }
 int createPolygon() {
-	const int NUM = 3;
+	const int NUM = 60;
 	struct SHAPE_VERTEX vertices[NUM];
 	float deg = 360.0f / NUM;
 	angleMode(DEGREES);
 	for (int i = 0; i < NUM; i++) {
-		vertices[i].x = cos(deg*i);
-		vertices[i].y = sin(deg*i);
+		vertices[i].x = sin(deg * i);
+		vertices[i].y = -cos(deg * i);
 	}
 	return createShape(vertices, NUM);
 }
+void gmain() {
+	window(1000, 1000);
+	int idx = createPolygon();
+	float deg = 0;
+	angleMode(DEGREES);
+	while (notQuit) {
+		deg += 1;
+		clear(200);
+		strokeWeight(5);
+		fill(255, 255, 0);
+		shape(idx, 500, 500, deg, 200);
+	}
+}
+*/
 
 /*
 #include"libOne.h"
