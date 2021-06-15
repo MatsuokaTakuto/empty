@@ -1,19 +1,264 @@
+
+#include"libOne.h"
+const int INIT = 0;
+const int PLAY = 1;
+const int OVER = 2;
+int GameState = INIT;
+float Size = 30;
+const int ROWS = 20;
+const int COLS = 12;
+float Satu = 200;
+float Value = 255;
+float Alpha = 255;
+int FallFlag = 0;
+struct COLOR Color[9]{
+	COLOR(0,Satu,Value,Alpha),
+	COLOR(30,Satu,Value,Alpha),
+	COLOR(60,Satu,Value,Alpha),
+	COLOR(120,Satu,Value,Alpha),
+	COLOR(180,Satu,Value,Alpha),
+	COLOR(240,Satu,Value,Alpha),
+	COLOR(300,Satu,Value,Alpha),
+	COLOR(200,44,88,Alpha),
+	COLOR(0,0,20,Alpha),
+};
+const int WALL = 7;
+const int BACK = 8;
+int Stage[ROWS][COLS];
+int X, Y, R;
+int Px[4], Py[4];
+int PtnNo = 0;
+int Ptn[7][3][2] = {
+	//■□■■...0
+	-1,0,   1,0,  2,0,
+	//■
+	//■□■....1
+	-1,-1, -1,0,  1,0,
+	//  　■
+	//■□■....2
+	-1,0,   1,-1, 1,0,
+	//■□
+	//　■■....3
+	-1,0,   0,1,  1,1,
+	//　□■
+	//■■  ....4
+	 1,0,   0,1, -1,1,
+	 //　■
+	 //■□■....5
+	 -1,0,   0,-1, 1,0,
+	 //□■
+	 //■■......6
+	  1,0,   0,1,  1,1,
+};
+int LoopCnt = 0;
+
+void init() {
+	for (int y = 0; y < ROWS; y++) {
+		Stage[y][0] = WALL;
+		Stage[y][COLS - 1] = WALL;
+		for (int x = 1; x < COLS - 1; x++) {
+			Stage[y][x] = BACK;
+			if (y == ROWS - 1) {
+				Stage[y][x] = WALL;
+			}
+		}
+	}
+	X = 5;
+	Y = 1;
+	R = 0;
+	PtnNo = random() % 7;
+	GameState = PLAY;
+}
+void drawStage() {
+	colorMode(HSV);
+	angleMode(DEGREES);
+	for (int y = 0; y < ROWS; y++) {
+		for (int x = 0; x < COLS; x++) {
+			int no = Stage[y][x];
+			fill(Color[no]);
+			rect(Size * x, Size * y, Size, Size);
+		}
+	}
+}
+void setPosition() {
+	Px[0] = X;
+	Py[0] = Y;
+	int r = R % 4;
+	for (int i = 0; i < 3; i++) {
+		int x = Ptn[PtnNo][i][0];
+		int y = Ptn[PtnNo][i][1];
+		for (int j = 0; j < r; j++) {
+			int w = x;
+			x = y;
+			y = -w;
+		}
+		Px[i + 1] = X + x;
+		Py[i + 1] = Y + y;
+	}
+}
+void setPtn() {
+	setPosition();
+	for (int i = 0; i < 4; i++) {
+		int x = Px[i];
+		int y = Py[i];
+		Stage[y][x] = PtnNo;
+	}
+}
+void delPtn() {
+	setPosition();
+	for (int i = 0; i < 4; i++) {
+		int x = Px[i];
+		int y = Py[i];
+		Stage[y][x] = BACK;
+	}
+}
+int collision() {
+	setPosition();
+	int flag = 0;
+	for (int i = 0; i < 4; i++) {
+		int x = Px[i];
+		int y = Py[i];
+		if (Stage[y][x] != BACK) {
+			flag = 1;
+		}
+	}
+	return flag;
+}
+void complete() {
+	for (int y = 1; y < ROWS - 1; y++) {
+		int flag = 1;
+		for (int x = 1; x < COLS - 1; x++) {
+			if (Stage[y][x] == BACK) {
+				flag = 0;
+			}
+		}
+		if (flag) {
+			for (int upy = y - 1; upy > 0; upy--) {
+				for (int x = 1; x < COLS - 1; x++) {
+					Stage[upy + 1][x] = Stage[upy][x];
+				}
+			}
+		}
+	}
+}
+void play() {
+	//Stage[Y][X] = BACK;
+	delPtn();
+	int dy = 0, dx = 0, dr = 0;
+	if ((++LoopCnt %= 30) == 0)dy = 1;
+	if (isTrigger(KEY_D))dx = 1;
+	if (isTrigger(KEY_A))dx = -1;
+	if (isTrigger(KEY_W))dr = 1;
+	if (isTrigger(KEY_S))FallFlag = 1;
+	if (FallFlag)dy = 1;
+	Y += dy;
+	X += dx;
+	R += dr;
+	//if (Stage[Y][X] != BACK) {
+	if (collision()) {
+		Y -= dy;
+		X -= dx;
+		R -= dr;
+		FallFlag = 0;
+		if (dy == 1 && dx == 0 && dr == 0) {
+			//Stage[Y][X] = PtnNo;
+			setPtn();
+			complete();
+			//新しいブロック
+			Y = 1;
+			X = 5;
+			R = 0;
+			PtnNo = random() % 7;
+			if (collision()) {
+				GameState = OVER;
+			}
+		}
+	}
+
+	//Stage[Y][X] = PtnNo;
+	setPtn();
+
+	clear(0);
+	drawStage();
+}
+void over() {
+	clear(0);
+	drawStage();
+	textSize(Size);
+	fill(0, 0, 255);
+	text("GAME OVER", Size * 2, Size);
+	if (isTrigger(KEY_SPACE)) {
+		GameState = INIT;
+	}
+}
+void gmain() {
+	window(Size * COLS, Size * ROWS);
+	while (notQuit) {
+		if (GameState == INIT)init();
+		else if (GameState == PLAY)play();
+		else if (GameState == OVER)over();
+	}
+}
+
+/*
+#include"libOne.h"
+//流星群
+void gmain() {
+	window(1920, 1080, full);
+	struct POS {
+		float x, y, z;
+	};
+	const int num = 1000;
+	struct POS p[num];
+	for (int i = 0; i < num; i++) {
+		p[i].x = random(-1.0f, 1.0f);
+		p[i].y = random(-0.5f, 0.5f);
+		p[i].z = random(0.0f, 1.0f);
+	}
+	while (notQuit) {
+		for (int i = 0; i < num; i++) {
+			p[i].z -= 0.003f;
+			if (p[i].z <= 0.0f) {
+				p[i].z = 1.0f;
+			}
+		}
+		fill(0, 0, 0, 60);
+		strokeWeight(0);
+		rect(0, 0, width, height);
+		mathAxis(1.0f);
+		stroke(200, 255, 255);
+		for (int i = 0; i < num; i++) {
+			float size = (1.0f - p[i].z) * 20.0f;
+			strokeWeight(size);
+			mathPoint(p[i].x / p[i].z, p[i].y / p[i].z);
+		}
+	}
+}
+*/
+
+/*
+//球体
 #include"libOne.h"
 struct POS {
 	float x, y, z;
 };
 void gmain() {
 	window(1000, 1000);
-	int numCorners = 8;
-	int numRings = 1;
+	int numCorners = 30;
+	int numRings = numCorners / 2 + 1;
 	int numVertices = numCorners * numRings;
 	float deg = 360.0f / numCorners;
 	angleMode(DEGREES);
 	struct POS* op = new POS[numVertices];
-	for (int i = 0; i < numCorners; i++) {
-		op[i].x = sin(deg * i);
-		op[i].y = cos(deg * i);
-		op[i].z = 0;
+	for (int j = 0; j < numRings; j++) {
+		float r = sin(deg * j);
+		float z = cos(deg * j);
+		for (int i = 0; i < numCorners; i++) {
+			int k = j * numCorners + i;
+			op[k].x = sin(deg * i) * r;
+			op[k].y = cos(deg * i) * r;
+			op[k].z = z;//1.0f - 2.0f / (numRings - 1) * j;
+		}
 	}
 	struct POS* p = new POS[numVertices];
 	deg = 0;
@@ -45,15 +290,24 @@ void gmain() {
 		clear(0);
 		mathAxis(0.5);
 		stroke(160, 200, 255);
-		strokeWeight(10);
 		for (int i = 0; i < numVertices; i++) {
-			int j = (i + 1) % 4;
+			strokeWeight(6);
 			mathPoint(p[i].x, p[i].y);
+			int j = i + 1;
+			if (j % numCorners == 0)j -= numCorners;
+			strokeWeight(2);
+			mathLine(p[i].x, p[i].y, p[j].x, p[j].y);
+			if (i < numVertices - numCorners) {
+				j = i + numCorners;
+				mathLine(p[i].x, p[i].y, p[j].x, p[j].y);
+			}
 		}
 	}
 	delete[]op;
 	delete[]p;
 }
+*/
+
 /*
 #include"libOne.h"
 //正方形
@@ -114,7 +368,6 @@ void gmain() {
 	}
 }
 */
-
 /*
 #include"libOne.h"
 //ハート形
