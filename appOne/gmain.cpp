@@ -1,4 +1,80 @@
+#include"libOne.h"
+void gmain() {
+	window(1000,1000);
+	float rx = 5, ry = 5;
+	float bx = 7, by = 7;
+	while (notQuit) {
+		bx = mathMouseX;
+		by = mathMouseY;
+		float vx = bx - rx;
+		float vy = by - ry;
+		float mag = sqrt(vx * vx + vy * vy);
+		float nvx = vx / mag;
+		float nvy = vy / mag;
+		rx += nvx * 0.01f;
+		ry += nvy * 0.01f;
+		clear(200);
+		mathAxis(9.1f);
+		strokeWeight(5);
+		stroke(0);
+		mathArrow(0, 0, vx, vy);
+		mathLine(0, 0, vx, 0);
+		mathLine(vx, 0, vx, vy);
+		stroke(255, 0, 0);
+		mathArrow(0, 0, nvx, nvy);
+		mathLine(0, 0, nvx, 0);
+		mathLine(nvx, 0, nvx, nvy);
 
+		strokeWeight(20);
+		stroke(255, 0, 0);
+		mathPoint(rx, ry);
+		stroke(0, 0, 255);
+		mathPoint(bx, by);
+
+		textSize(50);
+		text((let)"vec(" + vx + "," + vy + ")", 0, 50);
+		text((let)"mag:" + mag , 0, 100);
+		text((let)"nvec(" + nvx + "," + nvy + ")", 0, 150);
+		mag = sqrt(nvx * nvx + nvy * nvy);
+		text((let)"mag:" + mag, 0, 200);
+	}
+}
+
+/*
+#include"libOne.h"
+void gmain() {
+	window(1000, 1000);
+	float rx = 5;
+	float bx = 9;
+	while (notQuit) {
+		float vx = rx - bx;
+		float mag = vx < 0 ? -vx : vx;
+		float nvx = vx / mag;
+		//if (vx < 0) { mag = -vx; }
+		//else { mag = vx; }
+		bx += nvx * 0.01f;
+		clear(200);
+		mathAxis(9.1f);
+		strokeWeight(10);
+		stroke(0);
+		mathArrow(0, 0, vx, 0);
+		stroke(255, 0, 0);
+		mathArrow(0, 0, nvx, 0);
+
+		strokeWeight(20);
+		stroke(255, 0, 0);
+		mathPoint(rx, 0);
+		stroke(0, 0, 255);
+		mathPoint(bx, 0);
+
+		textSize(50);
+		text(vx, 0, 50);
+		text(mag, 0, 100);
+	}
+}
+*/
+
+/*
 #include"libOne.h"
 const int INIT = 0;
 const int PLAY = 1;
@@ -199,6 +275,7 @@ void gmain() {
 		else if (GameState == OVER)over();
 	}
 }
+*/
 
 /*
 #include"libOne.h"
