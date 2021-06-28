@@ -1,3 +1,409 @@
+#define _1
+#ifdef _
+#endif
+#ifdef _1
+#include"libOne.h"
+void gmain() {
+	window(1000, 1000);
+	int img = loadImage("assets\\pBullet.png");
+	int haikei = loadImage("assets\\green.png");
+	int player = loadImage("assets\\player.png");
+	struct V {
+		int hp = 0;
+		float px = 0, py = 0, vx = 0, vy = 0, deg = 0;
+	};
+	const int num = 256;
+	struct V u[num];
+	float deg = 0;
+	float deg2 = 0;
+	angleMode(DEGREES);
+	rectMode(CENTER);
+	while (notQuit) {
+		if (isPress(MOUSE_LBUTTON)) {
+			for (int i = 0; i < num; i++) {
+				if (u[i].hp == 0) {
+					u[i].hp = 1;
+					u[i].px = mouseX + sin(deg) * 20;
+					u[i].py = mouseY;
+					u[i].vx = 0;
+					u[i].vy = -10;
+					deg += 6;
+					i = num;
+				}
+			}
+		}
+		if (isPress(MOUSE_RBUTTON)) {
+			for (int i = 0; i < num; i++) {
+				if (u[i].hp == 0) {
+					u[i].hp = 1;
+					u[i].px = mouseX;
+					u[i].py = mouseY;
+					u[i].vx = sin(deg2) * 5;
+					u[i].vy = -cos(deg2) * 5;
+					deg2 += 25;
+					i = num;
+				}
+			}
+		}
+		for (int i = 0; i < num; i++) {
+			if (u[i].hp == 1) {
+				u[i].px += u[i].vx;
+				u[i].py += u[i].vy;
+				if (u[i].py > height + 50 || u[i].py < -50 ||
+					u[i].px<-50 || u[i].px>width + 50) {
+					u[i].hp = 0;
+				}
+			}
+		}
+		clear();
+		image(haikei, width / 2, height / 2);
+		for (int i = 0; i < num; i++) {
+			if (u[i].hp == 1) {
+				image(img, u[i].px, u[i].py, u[i].deg);
+			}
+		}
+		image(player, mouseX, mouseY);
+	}
+}
+#endif
+#ifdef _2
+#include"libOne.h"
+class CHARACTER {
+protected:
+	int Img = 0;
+	float Px = 0, Py = 0, Angle = 0;
+	float Vx = 0, Vy = 0, AngSpeed = 0;
+public:
+	void setImage(int img) {
+		Img = img;
+	}
+	void init() {
+		Px = width / 2;
+		Py = height / 2;
+		Angle = 0;
+		Vx = 1;
+		Vy = 1;
+		AngSpeed = 0.01f;
+	}
+	virtual void move() {
+		Angle += AngSpeed;
+	}
+	void draw() {
+		rectMode(CENTER);
+		image(Img, Px, Py, Angle);
+	}
+};
+
+class PLAYER : public CHARACTER {
+public:
+	void move() {
+		Px += Vx;
+	}
+};
+
+void gmain() {
+	window(1920, 1080, full);
+	int playerImg = loadImage("assets\\player.png");
+
+	PLAYER player;
+	CHARACTER* chara = &player;
+
+	chara->setImage(playerImg);
+	chara->init();
+	while (notQuit) {
+		chara->move();
+		clear();
+		chara->draw();
+	}
+}
+#endif
+#ifdef _BECTRU
+#include"libOne.h"
+void gmain() {
+	window(1000, 1000);
+	angleMode(DEGREES);
+	float x, y, angle;
+	while (notQuit) {
+		clear(0, 50, 0);
+		mathAxis(5.1f, 255);
+
+		x = mathMouseX;
+		y = mathMouseY;
+		angle = atan2(y, x);
+
+		strokeWeight(10);
+		stroke(128);
+		mathArrow(0, 0, x, y);
+		stroke(255, 255, 200);
+		mathArc(0, angle, 0.5f);
+
+		textSize(50);
+		fill(160);
+		text((let)"x=" + x, 0, 50);
+		text((let)"y=" + y, 0, 100);
+		fill(255, 255, 200);
+		text((let)"atan2(y,x)=" + angle, 0, 150);
+
+		float r = sqrt(x * x + y * y);
+		fill(255, 200, 200);
+		text((let)"asin(y/r)=" + asin(y / r), 0, 200);
+		text((let)"acos(x/y)=" + acos(x / r), 0, 250);
+		text((let)"atan(y/x)=" + atan(y / x), 0, 300);
+	}
+}
+#endif
+#ifdef _
+#include<stdio.h>
+#include"libOne.h"
+void ster(int tip) {
+	if (tip == 1) {
+		printf("Åô");
+	}
+	else if (tip == 2) {
+		printf("Åö");
+	}
+	else {
+		printf("?");
+	}
+}
+void sters(int num) {
+	for (int i = 0; i < num; i++) {
+		ster(2);
+	}
+}
+int main() {
+	sters(5);
+	system("pause>0");
+	return 0;
+}
+#endif
+#ifdef _
+#include"libOne.h"
+struct V {
+	int x;
+	int y;
+};
+void setZero(V* p) {
+	for (int i = 0; i < 3; i++) {
+		p[i].x = 0;
+		p[i].y = 0;
+	}
+}
+int main(){
+	V a[3];
+	for (int i = 0; i < 3; i++) {
+		a[i].x = i;
+		a[i].y = i;
+	}
+	setZero(a);
+	for (int i = 0; i < 3; i++) {
+		printf("%d %d", a[i].x, a[i].y);
+	}
+	system("pause > 0");
+	return 0;
+}
+#endif
+#ifdef _
+#include<stdio.h>
+struct V {
+	int x;
+	int y;
+};
+void setZero(struct V*p) {
+	for (int i = 0; i < 3; i++) {
+		p[i].x = 0;
+		p[i].y = 0;
+	}
+}
+int main() {
+	struct V a[3];
+	for (int i = 0; i < 3; i++) {
+		a[i].x = i + 1;
+		a[i].y = i + 1;
+	}
+	setZero(a);
+	for (int i = 0; i < 3; i++) {
+		printf("%d %d\n", a[i].x,a[i].y);
+	}
+	system("pause>0");
+	return 0;
+}
+#endif
+
+#ifdef _
+#include<stdio.h>
+#include"libOne.h"
+void A(int* p) {
+	for (int i = 0; i < 3; i++) {
+		p[i] = 0;
+	}
+}
+int main() {
+	int a[4];
+	for (int i = 0; i < 4; i++) {
+		a[i] = i + 1;
+	}
+	A(a);
+	for (int i = 0; i < 4; i++) {
+		printf("%2d", a[i]);
+	}
+	system("pause>0");
+	return 0;
+}
+#endif
+
+#ifdef _BECTRU
+#include"libOne.h"
+void gmain() {
+	window(1000, 1000);
+	angleMode(DEGREES);
+	float x, y, angle;
+	while (notQuit) {
+		clear(0, 50, 0);
+		mathAxis(5.1f, 255);
+
+		x = mathMouseX;
+		y = mathMouseY;
+		angle = atan2(y, x);
+
+		strokeWeight(10);
+		stroke(128);
+		mathArrow(0, 0, x, y);
+		stroke(255, 255, 200);
+		mathArc(0, angle, 0.5f);
+
+		textSize(50);
+		fill(160);
+		text((let)"x=" + x, 0, 50);
+		text((let)"y=" + y, 0, 100);
+		fill(255, 255, 200);
+		text((let)"angle(y,x)=" + angle, 0, 150);
+
+		float r = sqrt(x * x + y * y);
+		fill(255, 200, 200);
+		text((let)"asin(y/r)=" + asin(y / r), 0, 200);
+		text((let)"scos(x/r)=" + acos(x / r), 0, 250);
+		text((let)"atan(y/x)=" + atan(y / x), 0, 300);
+	}
+}
+#endif
+
+#ifdef _BECTRU
+#include"libOne.h"
+void gmain() {
+	window(1000, 1000);
+	float x, y, r;
+	float s, c, t;
+	float tx, ty;
+	while (notQuit) {
+		clear(0, 50, 0);
+		mathAxis(3.1f, 255);
+		x = mathMouseX;
+		y = mathMouseY;
+		r = sqrt(x * x + y * y);
+		c = x / r;
+		s = y / r;
+		t = y / x;
+
+		tx = s  * t;
+		ty = -c * t;
+		//å≥ÇÃÉxÉNÉgÉãÇï`âÊ
+		strokeWeight(4);
+		stroke(128);
+		mathArrow(0, 0, x, y);
+		//íPà â~Çï`âÊ
+		fill(0, 0, 0, 0);
+		mathCircle(0, 0, 2);
+		//ê≥ãKâªÉxÉNÉgÉãÇï`âÊ
+		strokeWeight(10);
+		stroke(200);
+		mathArrow(0, 0, c, s);
+		//cosÉ∆Çï`âÊ
+		stroke(160, 200, 255);
+		mathLine(0, 0, c, 0);
+		//sinÉ∆Çï`âÊ
+		stroke(255, 160, 200);
+		mathLine(c, 0, c, s);
+
+		stroke(255, 255, 255);
+		mathLine(c, s, c+tx, s+ty);
+	}
+}
+#endif
+
+#ifdef _KOTATUNEKO
+#include"libOne.h"
+void gmain() {
+	window(1920, 1080, full);
+	int kotatuImg = loadImage("assets\\kotatu0.png");
+	int kotatuColorImg = loadImage("assets\\kotatu1.png");
+	int mikanImg = loadImage("assets\\mikan.png");
+
+	int kimg = kotatuImg;
+	float kpx = width / 2;
+	float kpy = height / 2;
+
+	struct MIKAN {
+		float px;
+		float py;
+		float tx;
+		float ty;
+	};
+	const int totalNum = 10;
+	struct MIKAN m[totalNum];
+	int curNum = 0;
+	//-172,-40
+	for (int i = 0; i < totalNum; i++) {
+		m[i].tx = kpx - 172;
+		m[i].ty = kpy - 40 - 50 * i;
+	}
+	float speed = 20;
+
+	while (notQuit) {
+
+		if (isTrigger(MOUSE_LBUTTON)) {
+			if (curNum < totalNum) {
+				m[curNum].px = mouseX;
+				m[curNum].py = mouseY;
+				curNum++;
+			}
+		}
+		if (isTrigger(MOUSE_RBUTTON)) {
+			curNum = 0;
+			m[totalNum - 1].px = -100;
+		}
+		for (int i = 0; i < curNum; i++) {
+			float vx = m[i].tx - m[i].px;
+			float vy = m[i].ty - m[i].py;
+			float mag = sqrt(vx * vx + vy * vy);
+			if (mag > speed) {
+				m[i].px += vx / mag * speed;
+				m[i].py += vy / mag * speed;
+			}
+			else {
+				m[i].px = m[i].tx;
+				m[i].py = m[i].ty;
+			}
+		}
+		int last = totalNum - 1;
+		if (m[last].px == m[last].tx) {
+			kimg = kotatuColorImg;
+		}
+		else {
+			kimg = kotatuImg;
+		}
+
+		clear(220);
+		rectMode(CENTER);
+		image(kimg, kpx, kpy);
+		for (int i = 0; i < curNum; i++) {
+			image(mikanImg, m[i].px, m[i].py);
+		}
+	}
+}
+#endif
+
+#ifdef _BECTRU
 #include"libOne.h"
 void gmain() {
 	window(1000,1000);
@@ -39,8 +445,9 @@ void gmain() {
 		text((let)"mag:" + mag, 0, 200);
 	}
 }
+#endif
 
-/*
+#ifdef _BECTRU
 #include"libOne.h"
 void gmain() {
 	window(1000, 1000);
@@ -72,9 +479,9 @@ void gmain() {
 		text(mag, 0, 100);
 	}
 }
-*/
+#endif
 
-/*
+#ifdef _TETRIS
 #include"libOne.h"
 const int INIT = 0;
 const int PLAY = 1;
@@ -275,7 +682,7 @@ void gmain() {
 		else if (GameState == OVER)over();
 	}
 }
-*/
+#endif
 
 /*
 #include"libOne.h"
