@@ -1,7 +1,548 @@
-#define _1
+#include"libOne.h"
+class FLOAT2 {
+public:
+	float x = 0, y = 0;
+	FLOAT2(){
+	}
+	FLOAT2(float x, float y) {
+		this->x = x;
+		this->y = y;
+	}
+	FLOAT2 operator+(FLOAT2& f2) {
+		return FLOAT2(x + f2.x, y + f2.y);
+	}
+	FLOAT2 operator-(FLOAT2& f2) {
+		return FLOAT2(x - f2.x, y - f2.y);
+	}
+	FLOAT2 operator*(float f) {
+		return FLOAT2(x * f, y * f);
+	}
+	void operator+=(FLOAT2& f2) {
+		x += f2.x;
+		y += f2.y;
+	}
+	void normalize() {
+		float mag = sqrt(x * x + y * y);
+		x /= mag;
+		y /= mag;
+	}
+};
+void gmain() {
+	window(1000, 1000, full);
+	
+	FLOAT2 pos(100, 10);
+	FLOAT2 vec(200,20);
+	pos += vec;
+
+	printSize(200);
+	print(pos.x);
+	print(pos.y);
+	while (notQuit) {
+
+	}
+}
+
+/*
+//TAKO.h‚ÆTAKO.cpp‚ðŽg‚¤
+#include"libOne.h"
+#include"TAKO.h"
+void gmain() {
+	window(1920, 1080, full);
+	int takoImg = loadImage("assets\\enemy.png");
+	int num = 30;
+	TAKO* takos = new TAKO[num];
+	for (int i = 0; i < num; i++) {
+		takos[i].setImage(takoImg);
+		takos[i].init();
+	}
+	while (notQuit) {
+		for (int i = 0; i < num; i++) {
+			takos[i].move();
+			takos[i].draw();
+		}
+	}
+	delete[] takos;
+}
+*/
+
+/*
+#include"libOne.h"
+class ENEMY {
+protected:
+	int Img = 0;
+	float px, py, vx;
+public:
+	void setImage(int img) {
+		Img = img;
+	}
+	void init() {
+		px = random() % (int)width;
+		py = random() % (int)height;
+		vx = random() % 5 + 1.0f;
+	}
+	void move() {
+		px += vx;
+	}
+	void draw() {
+		image(Img, px, py);
+	}
+};
+void gmain() {
+	window(1920, 1080);
+	int enemyImg = loadImage("assets\\enemy.png");
+	int num = 5;
+	ENEMY* enemy = new ENEMY[num];
+	for (int i = 0; i < num; i++) {
+		enemy[i].init();
+		enemy[i].setImage(enemyImg);
+	}
+	while (notQuit) {
+		clear();
+		for (int i = 0; i < num; i++) {
+			enemy[i].move();
+			enemy[i].draw();
+		}
+	}
+}
+*/
+
+
+/*
+#include"libOne.h"
+
+struct CHARACTER {
+protected:
+	int Img = 0;
+	float Px = 0, Py = 0, Angle = 0;
+	float Vx = 0, Vy = 0, AngSpeed = 0;
+public:
+	void setImage(int img) {
+		Img = img;
+	}
+	void init() {
+		Px = width / 2;
+		Py = height / 2;
+		Angle = 0;
+		Vx = 1;
+		Vy = 1;
+		AngSpeed = 0.01f;
+	}
+	virtual void move() {
+		Angle += AngSpeed;
+	}
+	void draw() {
+		rectMode(CENTER);
+		image(Img, Px, Py, Angle);
+	}
+};
+class PLAYER : public CHARACTER {
+public:
+	void move() {
+		Px += Vx;
+	}
+};
+class ENEMY : public CHARACTER {
+public:
+	void move() {
+		Py += Vx;
+	}
+};
+class ENEMY_BULLET : public CHARACTER{};
+void gmain() {
+	window(1920, 1080, full);
+	int playerImg = loadImage("assets\\player.png");
+	int enemyImg = loadImage("assets\\enemy.png");
+	int eBulletImg = loadImage("assets\\eBullet.png");
+
+	PLAYER player;
+	ENEMY enemy;
+	ENEMY_BULLET eBullet;
+	player.setImage(playerImg);
+	enemy.setImage(enemyImg);
+	eBullet.setImage(eBulletImg);
+
+	const int num = 3;
+	CHARACTER* chara[num];
+	chara[0] = &enemy;
+	chara[1] = &player;
+	chara[2] = &eBullet;
+	for (int i = 0; i < num; i++) {
+		chara[i]->init();
+	}
+	while (notQuit) {
+		for (int i = 0; i < num; i++) {
+			chara[i]->move();
+		}
+		clear();
+		for (int i = 0; i < num; i++) {
+			chara[i]->draw();
+		}
+	}
+}
+*/
+
+
+
+
+/*
+#include"libOne.h"
+struct A {
+protected:
+	int Img = 0;
+	float px = 0, py = 0, Angle = 0, vx = 0, vy = 0, AngSpeed = 0;
+public:
+	void setImage(int img) {
+		Img = img;
+	}
+	void init() {
+		px = width / 2;
+		py = height / 2;
+		vx = 10;
+		vy = 10;
+		AngSpeed = 0.01f;
+	}
+	virtual void move(){
+		Angle += AngSpeed;
+	}
+	void draw() {
+		rectMode(CENTER);
+		image(Img, px, py, Angle);
+	}
+};
+class PLAYER :public A {
+public:
+	void move() {
+		px += vx;
+	}
+};
+void gmain() {
+	window(960, 1080);
+	int playerImg = loadImage("assets\\player.png");
+
+	PLAYER player;
+	A* a = &player;
+
+	A a;
+	a->init();
+	a->setImage(playerImg);
+	while (notQuit) {
+		a->move();
+		clear();
+		a->draw();
+	}
+}
+*/
+/*
+#include"libOne.h"
+void gmain() {
+	window(910, 1080);
+	struct PLAYER {
+		float px, py, w, h, vx, ofsY;
+	};
+	struct BULLET {
+		float px, py, w, h, vy;
+		int hp = 0;
+	};
+	struct PLAYER p;
+	p.px = width / 2;
+	p.py = height - 200;
+	p.w = 100;
+	p.h = 200;
+	p.vx = 10;
+	p.ofsY = -150;
+	const int numBLLET = 10;
+	struct BULLET b[numBLLET];
+	for (int i = 0; i < numBLLET; i++) {
+		b[i].px = p.px;
+		b[i].py = p.py;
+		b[i].w = 10;
+		b[i].h = 20;
+		b[i].vy = -10;
+	}
+	while (notQuit) {
+		if (isPress(KEY_D)) { p.px += p.vx; }
+		if (isPress(KEY_A)) { p.px -= p.vx; }
+		if (isTrigger(KEY_SPACE)) {
+			for (int i = 0; i < numBLLET; i++) {
+				if (b[i].hp == 0) {
+					b[i].hp = 1;
+					b[i].px = p.px;
+					b[i].py = p.py + p.ofsY;
+					i = numBLLET;
+				}
+			}
+		}
+		for (int i = 0; i < numBLLET; i++) {
+			if (b[i].hp > 0) {
+				b[i].py += b[i].vy;
+				if (b[i].py < -b[i].h) {
+					b[i].hp = 0;
+				}
+			}
+		}
+		clear();
+		rectMode(CENTER);
+		rect(p.px, p.py, p.w, p.h);
+		for (int i = 0; i < numBLLET; i++) {
+			if (b[i].hp > 0) {
+				rect(b[i].px, b[i].py, b[i].w, b[i].h);
+			}
+		}
+
+	}
+}
+*/
+
+
+
+
+
+
+
+/*
+#include"libOne.h"
+#include<stdio.h>
+void gmain(){
+	window(1920, 1080, full);
+	struct PLAYER {
+		float px, py, w, h, vx, ofsY;
+	};
+	struct BULLET {
+		float px, py, w, h, vy;
+		int hp = 0;
+	};
+	struct PLAYER p;
+	p.px = width / 2;
+	p.py = height - 150;
+	p.w = 100;
+	p.h = 200;
+	p.vx = 10;
+	p.ofsY = -100;
+	const int numBullets = 10;
+	struct BULLET b[numBullets];
+	for (int i = 0; i < numBullets; i++) {
+		b[i].px = p.px;
+		b[i].py = p.py;
+		b[i].w = 20;
+		b[i].h = 40;
+		b[i].vy = -10;
+	}
+	while (notQuit) {
+		if (isPress(KEY_A)) { p.px += -p.vx; }
+		if (isPress(KEY_D)) { p.px += p.vx; }
+		if (isTrigger(KEY_SPACE)) {
+			for (int i = 0; i < numBullets; i++) {
+				if (b[i].hp == 0) {
+					b[i].hp = 1;
+					b[i].px = p.px;
+					b[i].py = p.py + p.ofsY;
+				}
+			}
+		}
+		for (int i = 0; i < numBullets; i++) {
+			if (b[i].hp > 0) {
+				b[i].py += b[i].vy;
+				if (b[i].py < -b[i].h) {
+					b[i].hp = 0;
+				}
+			}
+		}
+		clear();
+		rectMode(CENTER);
+		rect(p.px, p.py, p.w, p.h);
+		for (int i = 0; i < numBullets; i++) {
+			if (b[i].hp > 0) {
+				rect(b[i].px, b[i].py, b[i].w, b[i].h);
+			}
+		}
+	}
+}
+*/
+
+
+
+
+/*
+#include"libOne.h"
+void gmain() {
+	window(1920, 1080, full);
+	int backImg = loadImage("assets\\green.png");
+	int mobImg = loadImage("assets\\enemy.png");
+	int playerImg = loadImage("assets\\player.png");
+	float px = 860;
+	float py = 1080 - 300;
+	float vx = 5;
+	float vy;
+	float initVy = -50;
+	float jampG = 3;
+	int jampFlag = 0;
+	while (notQuit) {
+		clear();
+		image(backImg, 0, 0);
+		image(playerImg, px, py);
+		if (isPress(KEY_D)) {
+			px += vx;
+		}
+		if (isPress(KEY_A)) {
+			px -= vx;
+		}
+		if (jampFlag == 0) {
+			if (isTrigger(KEY_SPACE)) {
+				vy = initVy;
+				jampFlag = 1;
+			}
+		}
+		if (jampFlag == 1) {
+			py += vy;
+			vy += jampG;
+			if (py>780) {
+				jampFlag = 0;
+			}
+		}
+	}
+}
+*/
+
+
+
+
+/*
+#include <stdio.h>
+#include <process.h>
+
+void setZeroInt(int* p) {
+	*p = 0;
+}
+
+int main() {
+	int a;
+	a = 7;
+
+	setZeroInt(&a);
+
+	printf("%d\n", a);
+
+	system("pause>0");
+	return 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#define _2
 #ifdef _
+#include<stdio.h>
+#include<process.h>
+#include"str.h"
+int main() {
+	char a[8];
+	setString(a, "ABC");
+	printf("%s", a);
+	system("pause>0");
+	return 0;
+}
 #endif
-#ifdef _1
+
+#ifdef _
+#include<stdio.h>
+#include<conio.h>
+void finish() {
+	_getch();
+}
+void nextLine() {
+	printf("\n");
+}
+void dispInt(int a) {
+	printf("%d", a);
+}
+void dispFloat(float a) {
+	printf("%f", a);
+}
+int add(int a, int b) {
+	return a + b;
+}
+float div(float a, float b) {
+	return a / b;
+}
+int main() {
+	dispInt(add(7, 5));
+	nextLine();
+	dispFloat(div(7, 5));
+	finish();
+	return 0;
+}
+#endif
+#ifdef _VEC
+#include"libOne.h"
+void gmain() {
+	window(1000, 1000);
+	float rx = 5;
+	float bx = 7;
+	while (notQuit) {
+		float vx = rx - bx;
+		float mag = vx < 0 ? -vx : vx;
+		float nvx = vx / mag;
+		bx += nvx * 0.01f;
+		clear(200);
+		mathAxis(9.1f);
+		strokeWeight(10);
+		stroke(0);
+		mathArrow(0, 0, vx, 0);
+		stroke(255, 0, 0);
+		mathArrow(0, 0, nvx, 0);
+
+		strokeWeight(20);
+		stroke(255, 0, 0);
+		mathPoint(rx, 0);
+		stroke(0, 0, 255);
+		mathPoint(bx, 0);
+
+		textSize(50);
+		text(vx, 0, 50);
+		text(mag, 0, 100);
+	}
+}
+
+#endif
+#ifdef _
+#include"libOne.h"
+#include"VEC.h"
+
+struct BEETLE {
+	struct VEC pos;
+	float advSpeed = 0;
+	float angle = 0;
+	float angSpeed = 0;
+};
+
+void gmain() {
+	window(1920, 1080, full);
+	int osuImg = loadImage("assets\\osu.png");
+	struct BEETLE osu;
+	osu.pos.x = width / 2;
+	osu.pos.y = height / 2;
+	osu.advSpeed = 10;
+	while (notQuit) {
+		clear();
+		image(osuImg, osu.pos.x, osu.pos.y, osu.angle);
+	}
+}
+#endif
+#ifdef _
 #include"libOne.h"
 void gmain() {
 	window(1000, 1000);
@@ -683,6 +1224,7 @@ void gmain() {
 	}
 }
 #endif
+*/
 
 /*
 #include"libOne.h"
